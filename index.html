@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Happy Propose Day 💖</title>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #ffe5ec, #fff0f3);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+    text-align: center;
+}
+
+#container {
+    padding: 20px;
+}
+
+/* Title */
+.propose-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #d00000;
+    margin-bottom: 20px;
+    text-shadow: 0 0 15px rgba(255, 77, 109, 0.6);
+    animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+    from { text-shadow: 0 0 10px rgba(255,77,109,0.4); }
+    to   { text-shadow: 0 0 25px rgba(255,77,109,1); }
+}
+
+/* Image */
+.photo-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 25px;
+}
+
+.romantic-img {
+    width: 240px;
+    border-radius: 30px;
+    box-shadow:
+        0 0 25px rgba(255, 77, 109, 0.5),
+        0 0 60px rgba(255, 77, 109, 0.35);
+    animation: softFloat 4s ease-in-out infinite;
+    transition: opacity 0.6s ease; /* smooth image change */
+}
+
+@keyframes softFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+
+/* Heart */
+.heart-glow {
+    position: absolute;
+    bottom: -18px;
+    right: -18px;
+    font-size: 2.2rem;
+    animation: heartbeat 1.5s infinite;
+    filter: drop-shadow(0 0 10px #ff4d6d);
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.25); }
+}
+
+.love-text {
+    color: #ff4d6d;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+}
+
+h1 {
+    color: #d00000;
+    font-size: 2.2rem;
+    margin-bottom: 25px;
+}
+
+/* Buttons */
+.buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+button {
+    padding: 15px 35px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#yesBtn {
+    background-color: #ff4d6d;
+    color: white;
+}
+
+#noBtn {
+    background-color: #adb5bd;
+    color: white;
+    position: relative;
+}
+
+#message {
+    display: none;
+    color: #ff4d6d;
+    font-size: 2rem;
+    font-weight: bold;
+    animation: fadeIn 1s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+</style>
+</head>
+
+<body>
+
+<div id="container">
+
+    <div class="propose-title">Happy Propose Day 💖</div>
+
+    <div class="photo-wrapper">
+        <img
+            id="mainImage"
+            src="https://raw.githubusercontent.com/Mukkiiii/Valentine/main/Angry%20Bird.jpeg"
+            class="romantic-img"
+            alt="My Valentine"
+        />
+        <div class="heart-glow">💖</div>
+    </div>
+
+    <p class="love-text">You make my world brighter 💕</p>
+
+    <h1 id="question">Will you be my Valentine, Janani ma? 🌹</h1>
+
+    <div class="buttons" id="btnGroup">
+        <button id="yesBtn" onclick="celebrate()">Yes 💕</button>
+        <button id="noBtn"
+            onclick="moveButton()"
+            onmouseover="moveButton()"
+            ontouchstart="moveButton()">
+            No 😅
+        </button>
+    </div>
+
+    <div id="message">
+        <p>I knew you'd say yes! 💖</p>
+        <p style="font-size: 1.2rem;">You just made my heart melt 🥹✨</p>
+    </div>
+
+</div>
+
+<audio id="bgMusic">
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_3b1a3b0a7b.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const question = document.getElementById("question");
+const btnGroup = document.getElementById("btnGroup");
+const message = document.getElementById("message");
+const bgMusic = document.getElementById("bgMusic");
+const mainImage = document.getElementById("mainImage");
+
+/* IMAGE LINKS */
+const defaultImage =
+"https://raw.githubusercontent.com/Mukkiiii/Valentine/main/Angry%20Bird.jpeg";
+
+const yesImage =
+"https://raw.githubusercontent.com/Mukkiiii/Valentine/main/Yes.jpg";
+
+const noTexts = [
+    "Are you sure? 🥺",
+    "Think again 😢",
+    "Pleaseee 💔",
+    "I’ll cry 😭",
+    "Just say yes 💕"
+];
+
+let noCount = 0;
+let moved = false;
+let yesGrowCount = 0;
+const maxGrow = 5;
+
+function moveButton() {
+    if (!moved) {
+        noBtn.style.position = "absolute";
+        moved = true;
+    }
+
+    noBtn.innerText = noTexts[Math.min(noCount, noTexts.length - 1)];
+    noCount++;
+
+    if (yesGrowCount < maxGrow) {
+        const size = parseFloat(getComputedStyle(yesBtn).fontSize);
+        yesBtn.style.fontSize = (size + 4) + "px";
+        yesGrowCount++;
+    }
+
+    const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+    const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+
+    noBtn.style.left = Math.random() * maxX + "px";
+    noBtn.style.top = Math.random() * maxY + "px";
+}
+
+function celebrate() {
+    bgMusic.play();
+
+    /* CHANGE IMAGE ON YES */
+    mainImage.style.opacity = "0";
+    setTimeout(() => {
+        mainImage.src = yesImage;
+        mainImage.style.opacity = "1";
+    }, 300);
+
+    question.style.display = "none";
+    btnGroup.style.display = "none";
+    message.style.display = "block";
+
+    confetti({
+        particleCount: 220,
+        spread: 110,
+        origin: { y: 0.6 }
+    });
+}
+</script>
+
+</body>
+</html>
